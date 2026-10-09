@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuvSamar — Национальная платформа умного мониторинга и экономии водных ресурсов Узбекистана</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
+
+    <!-- ХЕДЕР -->
+    <header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/85 border-b border-slate-800/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center space-x-3 group">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-cyan-500 to-teal-400 flex items-center justify-center shadow-lg shadow-cyan-500/25 group-hover:scale-105 transition-transform duration-300">
+                    <i class="fa-solid fa-droplet text-white text-xl animate-pulse"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-black tracking-tight bg-gradient-to-r from-white via-cyan-200 to-cyan-400 bg-clip-text text-transparent">SuvSamar</span>
+                    <span class="hidden sm:block text-[10px] uppercase tracking-widest text-cyan-400/80 font-semibold">Олимпиада · Экспертная версия</span>
+                </div>
+            </a>
+
+            <nav class="hidden lg:flex items-center space-x-1 bg-slate-900/70 p-1.5 rounded-full border border-slate-800/80 shadow-inner">
+                <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 text-white bg-cyan-600 shadow-md">Главная</button>
+                <button onclick="switchTab('map')" id="nav-map" class="nav-btn px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 text-slate-400 hover:text-white">Карта проблем</button>
+                <button onclick="switchTab('analytics')" id="nav-analytics" class="nav-btn px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 text-slate-400 hover:text-white">Аналитика регионов</button>
+                <button onclick="switchTab('calculator')" id="nav-calculator" class="nav-btn px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 text-slate-400 hover:text-white">Калькулятор</button>
+                <button onclick="switchTab('about')" id="nav-about" class="nav-btn px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 text-slate-400 hover:text-white">О проекте</button>
+            </nav>
+
+            <div class="hidden sm:flex items-center space-x-3">
+                <div class="hidden xl:flex items-center space-x-1.5 bg-slate-900/90 border border-slate-800 rounded-2xl px-3 py-1.5 text-xs text-slate-300">
+                    <i class="fa-solid fa-laptop text-cyan-400"></i>
+                    <span id="device-indicator" class="font-bold text-cyan-300">Десктоп (Ноутбук)</span>
+                </div>
+                <div class="flex items-center bg-slate-900 border border-slate-800 rounded-full p-1 text-xs font-bold">
+                    <button onclick="setLang('uz')" id="lang-uz" class="px-2.5 py-1 rounded-full text-slate-400 hover:text-white transition">UZ</button>
+                    <button onclick="setLang('ru')" id="lang-ru" class="px-2.5 py-1 rounded-full bg-cyan-600 text-white shadow">RU</button>
+                </div>
+                <button onclick="openModal()" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-xs shadow-lg shadow-cyan-500/20 hover:scale-105 transition">
+                    <i class="fa-solid fa-triangle-exclamation mr-1.5 text-amber-300"></i> Сообщить
+                </button>
+            </div>
+
+            <button onclick="toggleMobileMenu()" class="lg:hidden p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden lg:hidden px-4 pt-3 pb-6 space-y-2 bg-slate-900/95 border-b border-slate-800 backdrop-blur-2xl">
+            <div class="px-4 py-2 mb-2 rounded-xl bg-slate-950/60 border border-slate-800 text-xs flex items-center justify-between">
+                <span class="text-slate-400">Режим отображения:</span>
+                <span id="mobile-device-name" class="font-bold text-cyan-400">Смартфон / Планшет</span>
+            </div>
+            <button onclick="switchTab('home'); toggleMobileMenu()" class="block w-full text-left px-4 py-3 rounded-xl font-semibold text-slate-200 hover:bg-slate-800 text-sm">Главная</button>
+            <button onclick="switchTab('map'); toggleMobileMenu()" class="block w-full text-left px-4 py-3 rounded-xl font-semibold text-slate-200 hover:bg-slate-800 text-sm">Карта проблем</button>
+            <button onclick="switchTab('analytics'); toggleMobileMenu()" class="block w-full text-left px-4 py-3 rounded-xl font-semibold text-slate-200 hover:bg-slate-800 text-sm">Аналитика регионов</button>
+            <button onclick="switchTab('calculator'); toggleMobileMenu()" class="block w-full text-left px-4 py-3 rounded-xl font-semibold text-slate-200 hover:bg-slate-800 text-sm">Калькулятор потерь</button>
+            <button onclick="switchTab('about'); toggleMobileMenu()" class="block w-full text-left px-4 py-3 rounded-xl font-semibold text-slate-200 hover:bg-slate-800 text-sm">О проекте</button>
+            <div class="pt-3 flex items-center justify-between border-t border-slate-800">
+                <div class="flex items-center bg-slate-800 border border-slate-700 rounded-full p-1 text-xs font-bold">
+                    <button onclick="setLang('uz')" class="px-3 py-1 rounded-full text-slate-400">UZ</button>
+                    <button onclick="setLang('ru')" class="px-3 py-1 rounded-full bg-cyan-600 text-white">RU</button>
+                </div>
+                <button onclick="openModal(); toggleMobileMenu()" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold text-white text-xs shadow">Сообщить о течи</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <main class="flex-grow">
+        
+        <!-- ВКЛАДКА: ГЛАВНАЯ -->
+        <section id="tab-home" class="tab-content py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900/90 to-blue-950 border border-slate-800 p-8 sm:p-12 lg:p-16 mb-12 shadow-2xl">
+                <div class="absolute -right-20 -top-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="relative z-10 max-w-3xl">
+                    <div class="flex flex-wrap items-center gap-3 mb-6">
+                        <span class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold uppercase">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                            <span>Олимпиадный проект · Узбекистан 2026</span>
+                        </span>
+                        <span class="px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs font-bold">
+                            Экология & AI-Мониторинг
+                        </span>
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                        SuvSamar: Умная экосистема <br><span class="bg-gradient-to-r from-cyan-400 via-teal-300 to-blue-500 bg-clip-text text-transparent">сохранения водных ресурсов</span>
+                    </h1>
+                    
+                    <p class="text-slate-300 text-lg sm:text-xl mb-8 leading-relaxed font-normal">
+                        Комплексное цифровое решение для автоматизации обнаружения утечек питьевой воды и каналов в регионах Узбекистана с использованием краудсорсинга, IoT-датчиков и открытой карты инцидентов.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="switchTab('map')" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-500 to-blue-600 font-bold text-white shadow-lg shadow-cyan-500/25 hover:scale-105 transition flex items-center space-x-3">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                            <span>Смотреть интерактивную карту</span>
+                        </button>
+                        <button onclick="switchTab('about')" class="px-8 py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-slate-200 transition flex items-center space-x-3">
+                            <i class="fa-solid fa-file-lines text-cyan-400"></i>
+                            <span>Защита проекта (Презентация)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                <div class="glass-card rounded-3xl p-6 border border-slate-800 bg-slate-900/50 backdrop-blur-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-slate-400 text-xs font-bold uppercase">Сэкономлено воды</span>
+                        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+                            <i class="fa-solid fa-droplet text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-black text-white mb-1"><span id="stat-saved">1.42 млн</span> л</div>
+                </div>
+
+                <div class="glass-card rounded-3xl p-6 border border-slate-800 bg-slate-900/50 backdrop-blur-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-slate-400 text-xs font-bold uppercase">Активные заявки</span>
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                            <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-black text-white mb-1" id="stat-active">14</div>
+                </div>
+
+                <div class="glass-card rounded-3xl p-6 border border-slate-800 bg-slate-900/50 backdrop-blur-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-slate-400 text-xs font-bold uppercase">Устраненные аварии</span>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                            <i class="fa-solid fa-circle-check text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-black text-white mb-1" id="stat-resolved">89</div>
+                </div>
+
+                <div class="glass-card rounded-3xl p-6 border border-slate-800 bg-slate-900/50 backdrop-blur-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-slate-400 text-xs font-bold uppercase">Охват регионов</span>
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center">
+                            <i class="fa-solid fa-map text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-black text-white mb-1">14 общ.</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="font-bold text-white text-lg">Реальная проверяемость</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Судьи могут в реальном времени отправить заявку через модальное окно на сайте, и она мгновенно обновит счетчики и карту на вашем экране.
+                    </p>
+                </div>
+
+                <div class="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <h3 class="font-bold text-white text-lg">Адаптивность интерфейса</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Система автоматически определяет устройство (ноутбук, планшет, смартфон) и адаптирует сетку блоков для максимального удобства презентации.
+                    </p>
+                </div>
+
+                <div class="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <h3 class="font-bold text-white text-lg">Экономический эффект</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Встроенный расчет окупаемости показывает сколько литров и сумов сберегает муниципалитет при своевременном устранении скрытых протечек.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ВКЛАДКА: КАРТА ПРОБЛЕМ -->
+        <section id="tab-map" class="tab-content hidden py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold tracking-tight text-white mb-2">Интерактивная карта протечек Узбекистана</h2>
+                    <p class="text-slate-400 text-sm">Оперативный мониторинг инцидентов по регионам в реальном времени</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="filterIssues('all')" class="px-4 py-2 rounded-xl bg-cyan-600 text-white text-xs font-bold transition shadow" id="filter-all">Все</button>
+                    <button onclick="filterIssues('new')" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-bold transition" id="filter-new">Новые</button>
+                    <button onclick="filterIssues('progress')" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-bold transition" id="filter-progress">В работе</button>
+                    <button onclick="filterIssues('resolved')" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 text-xs font-bold transition" id="filter-resolved">Устранены</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 rounded-3xl bg-slate-900/70 border border-slate-800 p-6 relative overflow-hidden min-h-[500px] flex flex-col justify-between shadow-2xl">
+                    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#06b6d4_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none"></div>
+                    
+                    <div class="flex justify-between items-center z-10">
+                        <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-3.5 py-1.5 rounded-full">Республиканский мониторинг</span>
+                        <div class="text-xs text-slate-400">GPS-координаты активны</div>
+                    </div>
+
+                    <div class="relative h-80 z-10 my-auto">
+                        <div onclick="selectMarker('Ташкент')" class="absolute top-[32%] left-[55%] cursor-pointer group">
+                            <div class="w-6 h-6 rounded-full bg-cyan-500/30 animate-ping absolute -inset-1"></div>
+                            <div class="w-5 h-5 rounded-full bg-cyan-500 border-2 border-white flex items-center justify-center shadow-lg group-hover:scale-125 transition">
+                                <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
+                            </div>
+                            <div class="absolute left-7 top-0 bg-slate-900/90 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold text-white whitespace-nowrap shadow-xl">
+                                Ташкент: Авария трубы
+                            </div>
+                        </div>
+
+                        <div onclick="selectMarker('Самарканд')" class="absolute top-[60%] left-[40%] cursor-pointer group">
+                            <div class="w-5 h-5 rounded-full bg-amber-500 border-2 border-white flex items-center justify-center shadow-lg group-hover:scale-125 transition">
+                                <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
+                            </div>
+                            <div class="absolute left-7 top-0 bg-slate-900/90 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold text-white whitespace-nowrap shadow-xl">
+                                Самарканд: Утечка в арыке
+                            </div>
+                        </div>
+
+                        <div onclick="selectMarker('Бухара')" class="absolute top-[55%] left-[22%] cursor-pointer group">
+                            <div class="w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center shadow-lg group-hover:scale-125 transition">
+                                <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
+                            </div>
+                            <div class="absolute left-7 top-0 bg-slate-900/90 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold text-white whitespace-nowrap shadow-xl">
+                                Бухара: Устранено
+                            </div>
+                        </div>
+
+                        <div onclick="selectMarker('Фергана')" class="absolute top-[45%] left-[75%] cursor-pointer group">
+                            <div class="w-6 h-6 rounded-full bg-cyan-500/30 animate-ping absolute -inset-1"></div>
+                            <div class="w-5 h-5 rounded-full bg-cyan-500 border-2 border-white flex items-center justify-center shadow-lg group-hover:scale-125 transition">
+                                <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
+                            </div>
+                            <div class="absolute left-7 top-0 bg-slate-900/90 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold text-white whitespace-nowrap shadow-xl">
+                                Фергана: Порыв магистрали
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="z-10 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800 pt-4">
+                        <span>Нажмите на регион для детализации</span>
+                        <span class="text-cyan-400 font-bold">Всего инцидентов: <span id="total-points-count">4</span></span>
+                    </div>
+                </div>
+
+                <div class="space-y-4 max-h-[520px] overflow-y-auto pr-2" id="issues-list">
+                </div>
+            </div>
+        </section>
+
+        <!-- ВКЛАДКА: АНАЛИТИКА РЕГИОНОВ -->
+        <section id="tab-analytics" class="tab-content hidden py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
+            <div class="text-center max-w-2xl mx-auto">
+                <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 px-3.5 py-1.5 rounded-full border border-cyan-500/20">Экспертный модуль</span>
+                <h2 class="text-3xl font-extrabold text-white mt-4 mb-2">Аналитика и статистика по регионам Узбекистана</h2>
+                <p class="text-slate-400 text-sm">Сравнительный анализ объемов водопотребления и потерь по ключевым областям</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-white">Ташкент и область</span>
+                        <span class="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 font-semibold">Высокая нагрузка</span>
+                    </div>
+                    <div class="space-y-2 text-xs text-slate-300">
+                        <div class="flex justify-between"><span>Потери воды:</span> <span class="font-bold text-white">28.4%</span></div>
+                        <div class="flex justify-between"><span>Устранено заявок:</span> <span class="font-bold text-emerald-400">42 ед.</span></div>
+                        <div class="flex justify-between"><span>Среднее время ответа:</span> <span class="font-bold text-white">3.5 часа</span></div>
+                    </div>
+                    <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+                        <div class="bg-amber-500 h-full rounded-full" style="width: 75%"></div>
+                    </div>
+                </div>
+
+                <div class="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-white">Самаркандская область</span>
+                        <span class="text-xs px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 font-semibold">Стабильно</span>
+                    </div>
+                    <div class="space-y-2 text-xs text-slate-300">
+                        <div class="flex justify-between"><span>Потери воды:</span> <span class="font-bold text-white">19.1%</span></div>
+                        <div class="flex justify-between"><span>Устранено заявок:</span> <span class="font-bold text-emerald-400">27 ед.</span></div>
+                        <div class="flex justify-between"><span>Среднее время ответа:</span> <span class="font-bold text-white">4.1 часа</span></div>
+                    </div>
+                    <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+                        <div class="bg-cyan-500 h-full rounded-full" style="width: 55%"></div>
+                    </div>
+                </div>
+
+                <div class="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-white">Ферганская долина</span>
+                        <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold">Отличные показатели</span>
+                    </div>
+                    <div class="space-y-2 text-xs text-slate-300">
+                        <div class="flex justify-between"><span>Потери воды:</span> <span class="font-bold text-white">14.5%</span></div>
+                        <div class="flex justify-between"><span>Устранено заявок:</span> <span class="font-bold text-emerald-400">34 ед.</span></div>
+                        <div class="flex justify-between"><span>Среднее время ответа:</span> <span class="font-bold text-white">2.8 часа</span></div>
+                    </div>
+                    <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+                        <div class="bg-emerald-500 h-full rounded-full" style="width: 40%"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ВКЛАДКА: КАЛЬКУЛЯТОР -->
+        <section id="tab-calculator" class="tab-content hidden py-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-extrabold tracking-tight text-white mb-2">Калькулятор потерь воды</h2>
+                <p class="text-slate-400 text-sm">Рассчитайте масштаб потерь в литрах и сумах в зависимости от характера повреждения</p>
+            </div>
+
+            <div class="glass-card rounded-3xl bg-slate-900/80 border border-slate-800 p-8 shadow-2xl space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Тип повреждения</label>
+                        <select id="calc-type" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3.5 text-white font-medium focus:outline-none focus:border-cyan-500">
+                            <option value="15">Капающий кран (15 л/сутки)</option>
+                            <option value="500" selected>Струйка из трубы (500 л/сутки)</option>
+                            <option value="5000">Прорыв трубы (5,000 л/сутки)</option>
+                            <option value="25000">Утечка в открытом арыке (25,000 л/сутки)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Период времени</label>
+                        <select id="calc-time" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3.5 text-white font-medium focus:outline-none focus:border-cyan-500">
+                            <option value="1">1 сутки</option>
+                            <option value="7" selected>1 неделя</option>
+                            <option value="30">1 месяц</option>
+                            <option value="365">1 год</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-gradient-to-r from-cyan-950/40 to-blue-950/40 border border-cyan-500/20 flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <div>
+                        <div class="text-xs uppercase tracking-wider text-cyan-400 font-bold mb-1">Общий объем потерь</div>
+                        <div class="text-4xl font-black text-white" id="calc-result-liters">3,500 л</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs uppercase tracking-wider text-amber-400 font-bold mb-1">Финансовый ущерб</div>
+                        <div class="text-3xl font-extrabold text-white" id="calc-result-cost">42,000 сум</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ВКЛАДКА: О ПРОЕКТЕ -->
+        <section id="tab-about" class="tab-content hidden py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+            <div class="glass-card rounded-3xl bg-slate-900/80 border border-slate-800 p-8 sm:p-12 shadow-2xl space-y-8">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-cyan-400 bg-cyan-500/10 px-3.5 py-1.5 rounded-full border border-cyan-500/20">Олимпиадная защита</span>
+                    <h2 class="text-3xl font-extrabold text-white mt-4 mb-4">Архитектура и миссия проекта SuvSamar</h2>
+                    <p class="text-slate-300 leading-relaxed text-base">
+                        Проект направлен на решение актуальной проблемы Узбекистана — дефицита воды и высоких потерь в водопроводных сетях и арычных системах. Платформа объединяет гражданское общество, коммунальные службы и муниципальные органы в единый контур реагирования.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-6 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-3">
+                        <h3 class="font-bold text-white text-lg flex items-center space-x-2">
+                            <i class="fa-solid fa-bullseye text-cyan-400"></i>
+                            <span>Целевая аудитория</span>
+                        </h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Жители городов и сел Узбекистана, городские хокимияты, инспекции по контролю за водными ресурсами и водоканал.
+                        </p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-3">
+                        <h3 class="font-bold text-white text-lg flex items-center space-x-2">
+                            <i class="fa-solid fa-code text-cyan-400"></i>
+                            <span>Технологический стек</span>
+                        </h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            HTML5, Tailwind CSS, JavaScript (ES6+), адаптивная верстка под ноутбуки, планшеты и мобильные устройства, интерактивное DOM-управление в реальном времени.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ФУТЕР -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 mt-20 pt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="space-y-4 md:col-span-1">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center shadow">
+                            <i class="fa-solid fa-droplet text-white"></i>
+                        </div>
+                        <span class="text-xl font-extrabold text-white">SuvSamar</span>
+                    </div>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Национальная олимпиадная разработка по спасению и мониторингу водных ресурсов Узбекистана.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4">Навигация</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><button onclick="switchTab('home')" class="text-slate-400 hover:text-cyan-400 transition">Главная</button></li>
+                        <li><button onclick="switchTab('map')" class="text-slate-400 hover:text-cyan-400 transition">Карта проблем</button></li>
+                        <li><button onclick="switchTab('analytics')" class="text-slate-400 hover:text-cyan-400 transition">Аналитика регионов</button></li>
+                        <li><button onclick="switchTab('calculator')" class="text-slate-400 hover:text-cyan-400 transition">Калькулятор</button></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4">Регионы</h4>
+                    <ul class="space-y-2.5 text-sm text-slate-400">
+                        <li>Ташкент и область</li>
+                        <li>Самарканд и область</li>
+                        <li>Бухара и область</li>
+                        <li>Ферганская долина</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4">Статус защиты</h4>
+                    <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-xs space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Версия олимпиады:</span>
+                            <span class="text-emerald-400 font-bold flex items-center space-x-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span>Готова к защите</span>
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-slate-400">Адаптивность:</span>
+                            <span class="text-cyan-300 font-bold">Ноутбук / Планшет / Смартфон</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-900 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+                <p>&copy; 2026 SuvSamar. Все права защищены. Разработано для победы на олимпиаде.</p>
+                <div class="flex space-x-6 mt-4 sm:mt-0">
+                    <a href="#" class="hover:text-slate-300 transition">Документация</a>
+                    <a href="#" class="hover:text-slate-300 transition">Регламент</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- МОДАЛЬНОЕ ОКНО ПОДАЧИ ЗАЯВКИ -->
+    <div id="report-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+        <div class="glass-card w-full max-w-lg rounded-3xl bg-slate-900 border border-slate-800 p-6 sm:p-8 shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white p-2">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <h3 class="text-2xl font-extrabold text-white mb-2">Сообщить о протечке</h3>
+            <p class="text-slate-400 text-xs mb-6">Заявка мгновенно отобразится на интерактивной карте для проверки жюри</p>
+
+            <form id="issue-form" onsubmit="submitIssue(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Регион / Город</label>
+                    <select id="form-region" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm font-medium focus:outline-none focus:border-cyan-500">
+                        <option value="Ташкент">Ташкент</option>
+                        <option value="Самарканд">Самарканд</option>
+                        <option value="Бухара">Бухара</option>
+                        <option value="Фергана">Фергана</option>
+                        <option value="Нукус">Нукус</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Категория проблемы</label>
+                    <select id="form-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm font-medium focus:outline-none focus:border-cyan-500">
+                        <option value="Авария трубы">Авария трубы / Прорыв</option>
+                        <option value="Утечка в арыке">Утечка в арыке / канале</option>
+                        <option value="Неисправность сети">Неисправность общедомовой сети</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Точный адрес или ориентир</label>
+                    <input type="text" id="form-address" required placeholder="Например: ул. Навои, 14" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm font-medium focus:outline-none focus:border-cyan-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Описание проблемы</label>
+                    <textarea id="form-desc" rows="3" required placeholder="Опишите масштаб течи..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm font-medium focus:outline-none focus:border-cyan-500"></textarea>
+                </div>
+
+                <div class="pt-4 flex items-center justify-end space-x-3">
+                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-bold text-sm hover:bg-slate-700 transition">Отмена</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-sm shadow-lg shadow-cyan-600/30 transition">Отправить заявку</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
